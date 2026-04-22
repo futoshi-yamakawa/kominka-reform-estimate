@@ -162,8 +162,17 @@ def bullet_list(ul: Node, styles) -> list:
 
 
 def boxed_text(node: Node, styles, border_color, bg_color) -> Table:
-    body = clean_text(inline_text(node))
-    body = re.sub(r"^参考URL:\s*", "<b>参考URL:</b> ", body)
+    klass = node.attrs.get("class", "")
+    if "source-box" in klass:
+        lines = []
+        strong_nodes = child_nodes(node, {"strong"})
+        title = plain(strong_nodes[0]) if strong_nodes else "参考URL:"
+        lines.append(f"<b>{html.escape(title)}</b>")
+        for li in walk(node, "li"):
+            lines.append("・" + clean_text(inline_text(li)))
+        body = "<br/>".join(lines)
+    else:
+        body = clean_text(inline_text(node))
     table = Table([[Paragraph(body, styles["JPBodySmall"])]], colWidths="100%")
     table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), bg_color),
@@ -331,10 +340,10 @@ def main():
     doc = SimpleDocTemplate(
         str(PDF_PATH),
         pagesize=A4,
-        leftMargin=9 * mm,
-        rightMargin=9 * mm,
-        topMargin=10 * mm,
-        bottomMargin=15 * mm,
+        leftMargin=12 * mm,
+        rightMargin=12 * mm,
+        topMargin=13 * mm,
+        bottomMargin=18 * mm,
         title="古民家リフォーム費用予測・プラン資料",
         author="futoshi-yamakawa",
     )
