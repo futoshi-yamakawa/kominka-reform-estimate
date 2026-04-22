@@ -234,7 +234,12 @@ def html_table(node: Node, styles, available_width: float) -> LongTable:
     for row in rows:
         while len(row) < cols:
             row.append("")
-    if cols == 5:
+    table_rows = walk(node, "tr")
+    header_row = table_rows[0] if table_rows else Node("")
+    header_text = [clean_text(inline_text(cell)) for cell in child_nodes(header_row, {"th", "td"})]
+    if cols == 5 and "DIY項目" in header_text:
+        widths = [0.10, 0.16, 0.34, 0.14, 0.26]
+    elif cols == 5:
         widths = [0.18, 0.18, 0.18, 0.22, 0.24]
     elif cols == 4:
         widths = [0.16, 0.19, 0.30, 0.35]
