@@ -257,6 +257,16 @@ def html_table(node: Node, styles, available_width: float) -> LongTable:
 
 def summary_grid(metrics: Node, styles, available_width: float) -> Table:
     cells = []
+    metric_value_style = ParagraphStyle(
+        "MetricValue",
+        parent=styles["JPBody"],
+        fontSize=11.7,
+        leading=14,
+        textColor=HEAD,
+        alignment=TA_CENTER,
+        wordWrap=None,
+        splitLongWords=0,
+    )
     for metric in child_nodes(metrics, {"div"}):
         klass = metric.attrs.get("class", "")
         if "metric" not in klass:
@@ -266,10 +276,10 @@ def summary_grid(metrics: Node, styles, available_width: float) -> Table:
         value = plain(divs[1]) if len(divs) > 1 else ""
         cells.append([
             Paragraph(label, styles["JPBodySmall"]),
-            Paragraph(f"<b>{html.escape(value)}</b>", ParagraphStyle("MetricValue", parent=styles["JPBody"], fontSize=12.5, leading=15, textColor=HEAD, alignment=TA_CENTER)),
+            Paragraph(f"<b>{html.escape(value)}</b>", metric_value_style),
         ])
-    col_width = (available_width - 12) / 4
-    table = Table([cells], colWidths=[col_width] * len(cells))
+    col_widths = [available_width * width for width in (0.235, 0.235, 0.235, 0.295)]
+    table = Table([cells], colWidths=col_widths[:len(cells)])
     table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), SOFT),
         ("BOX", (0, 0), (-1, -1), 0.5, LINE),
