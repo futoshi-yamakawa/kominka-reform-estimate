@@ -26,7 +26,7 @@
       line-height: 1.55;
       background: #fff;
     }
-    main { max-width: 1120px; margin: 0 auto; padding: 26px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 26px; }
     .cover { border-top: 7px solid var(--head); padding-top: 20px; margin-bottom: 20px; }
     h1 { margin: 0 0 8px; font-size: 23pt; line-height: 1.18; color: var(--head); letter-spacing: 0; }
     .subtitle { margin: 0; color: var(--muted); font-size: 10.5pt; }
@@ -71,12 +71,14 @@
     .source-box ul { margin: 4px 0 0 1.1em; }
     .source-box li { margin: 2px 0; }
     .hero-image {
-      width: 100%;
-      max-height: 310px;
+      width: min(100vw, 1180px);
+      max-height: 430px;
       object-fit: cover;
       object-position: center;
       border: 1px solid var(--line);
       margin: 14px 0 6px;
+      margin-left: 50%;
+      transform: translateX(-50%);
       display: block;
     }
     .plan-image {
@@ -115,7 +117,10 @@
       font-size: 8.6pt;
     }
     .page-break { break-before: page; }
-    @media print { main { padding: 0; } }
+    @media print {
+      main { padding: 0; }
+      .hero-image { width: 100%; max-height: 270px; margin-left: 0; transform: none; }
+    }
   </style>
 </head>
 <body>
