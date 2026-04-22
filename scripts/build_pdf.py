@@ -17,6 +17,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.platypus import (
     Image,
     LongTable,
+    PageBreak,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
@@ -311,6 +312,9 @@ def build_story(root: Node, styles, available_width: float):
     story = []
     main = walk(root, "main")[0]
     for section in child_nodes(main, {"section"}):
+        headings = child_nodes(section, {"h2"})
+        if headings and plain(headings[0]).startswith(("7. DIY", "9. 未確定")) and story:
+            story.append(PageBreak())
         for node in child_nodes(section):
             klass = node.attrs.get("class", "")
             if node.tag == "h1":
@@ -357,8 +361,8 @@ def main():
         pagesize=A4,
         leftMargin=12 * mm,
         rightMargin=12 * mm,
-        topMargin=13 * mm,
-        bottomMargin=18 * mm,
+        topMargin=11 * mm,
+        bottomMargin=15 * mm,
         title="古民家リフォーム費用予測・プラン資料",
         author="futoshi-yamakawa",
     )
